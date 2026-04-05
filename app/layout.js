@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 import { getEntries } from "@/lib/contentstack";
+import { normalizeNavigationEntries } from "@/lib/navigation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,14 +37,7 @@ export default async function RootLayout({ children }) {
     entries = [];
   }
 
-  const items = [...entries]
-    .sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0))
-    .map((entry) => ({
-      uid: entry.uid,
-      label: String(entry.label ?? "").trim(),
-      link: String(entry.link ?? "").trim(),
-    }))
-    .filter((item) => item.label && item.link);
+  const items = normalizeNavigationEntries(entries);
 
   return (
     <html

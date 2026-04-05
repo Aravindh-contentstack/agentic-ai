@@ -51,11 +51,31 @@ export default async function Home() {
       e && typeof e === "object" && "message" in e
         ? String(e.message)
         : String(e);
+    const cs =
+      e && typeof e === "object"
+        ? {
+            error_message:
+              "error_message" in e
+                ? String(
+                    /** @type {{ error_message?: unknown }} */ (e)
+                      .error_message,
+                  )
+                : undefined,
+            errors:
+              "errors" in e
+                ? /** @type {{ errors?: unknown }} */ (e).errors
+                : undefined,
+          }
+        : {};
     agentDebugLog({
       hypothesisId: "H3",
       location: "app/page.js:catch",
       message: "Home swallowed getEntries error",
-      data: { errorMessage: msg, pageTypeUid },
+      data: {
+        errorMessage: msg,
+        pageTypeUid,
+        contentstackError: cs,
+      },
     });
     // #endregion
     entries = [];
